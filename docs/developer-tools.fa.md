@@ -1,4 +1,4 @@
-<div dir="rtl">
+<div dir="ltr">
 
 # راهنمای توسعه‌دهندگان پکیج Laravel Workflow
 
