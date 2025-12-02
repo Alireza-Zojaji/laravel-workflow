@@ -1,5 +1,3 @@
-<div dir="ltr">
-
 # راهنمای توسعه‌دهندگان پکیج Laravel Workflow
 
 این سند ابزارها و APIهایی را که برای توسعه‌دهندگان در پکیج `laravel-workflow` فراهم شده توضیح می‌دهد: نقش هر جزء، ورودی‌ها و خروجی‌ها، و مثال‌های استفاده. هدف این است که بتوانید گردش‌کارها را بسازید، تسک‌ها را مدیریت کنید، و به‌صورت مطمئن آن‌ها را پیش ببرید و انتساب کنید.
@@ -24,8 +22,6 @@
 - مثال استفاده:
 
 
-<div dir="ltr">
-
 ```php
 use Amir\Workflow\Facades\Workflow;
 
@@ -39,9 +35,6 @@ $res2 = Workflow::finalizeSelection($instanceId, $stateId, 'Approve Request', $c
     'assignment_method' => 'role_direct_user',
 ]);
 ```
-
-</div>
-
 
 ## Builder: `InstanceBuilder`
 
@@ -62,16 +55,11 @@ $res2 = Workflow::finalizeSelection($instanceId, $stateId, 'Approve Request', $c
 - مثال:
 
 
-<div dir="ltr">
-
 ```php
 use Amir\Workflow\Facades\Workflow;
 
 $r = Workflow::instance($instanceId)->autoRun();
 ```
-
-</div>
-
 
 ## Builder: `TaskBuilder`
 
@@ -95,17 +83,12 @@ $r = Workflow::instance($instanceId)->autoRun();
 - مثال:
 
 
-<div dir="ltr">
-
 ```php
 use Amir\Workflow\Facades\Workflow;
 
 $result = Workflow::onTask($taskId, $userId)
     ->completeAndAutoRoute(['priority' => 3]);
 ```
-
-</div>
-
 
 نکته: اگر گاردها اجازه‌ی پیشروی ندهند، `completeAndAutoRoute` وظایف خودکار مرحله‌ی فعلی را دوباره ایجاد نمی‌کند و خلاصه‌ی وضعیت را برمی‌گرداند.
 
@@ -133,8 +116,6 @@ $result = Workflow::onTask($taskId, $userId)
 - مثال:
 
 
-<div dir="ltr">
-
 ```php
 use Amir\Workflow\Contracts\WorkflowEngineInterface;
 
@@ -148,9 +129,6 @@ $result = $engine->decideAndAssign([
     'strategyKey' => 'least_busy',
 ]);
 ```
-
-</div>
-
 
 ## Service: `AutomaticTriggerRunner`
 
@@ -180,16 +158,11 @@ $result = $engine->decideAndAssign([
 - مثال موازی:
 
 
-<div dir="ltr">
-
 ```php
 $ctx = ['instance_id' => $instanceId, 'state_id' => $stateId];
 $res = app(\Amir\Workflow\Services\AutomaticTriggerRunner::class)
     ->runForDefinition($definition, 'reviewing', $ctx);
 ```
-
-</div>
-
 
 ## Service: `DecisionEngine`
 
@@ -210,8 +183,6 @@ $res = app(\Amir\Workflow\Services\AutomaticTriggerRunner::class)
 - مثال توسعه‌ی Providerها:
 
 
-<div dir="ltr">
-
 ```php
 // App\Providers\AppServiceProvider::register()
 $this->app->extend(DecisionEngineInterface::class, function ($engine, $app) {
@@ -229,9 +200,6 @@ $this->app->extend(DecisionEngineInterface::class, function ($engine, $app) {
 });
 ```
 
-</div>
-
-
 ## Service: `TaskAssigner`
 
 انتخاب کاربر مقصد برای تسک.
@@ -247,8 +215,6 @@ $this->app->extend(DecisionEngineInterface::class, function ($engine, $app) {
 - توسعه‌ی استراتژی‌ها:
 
 
-<div dir="ltr">
-
 ```php
 // App\Providers\AppServiceProvider::register()
 $this->app->extend(TaskAssignerInterface::class, function ($assigner, $app) {
@@ -259,9 +225,6 @@ $this->app->extend(TaskAssignerInterface::class, function ($assigner, $app) {
     ]);
 });
 ```
-
-</div>
-
 
 ## API‌ها (JSON)
 
@@ -293,8 +256,6 @@ $this->app->extend(TaskAssignerInterface::class, function ($assigner, $app) {
 ایجاد تسک:
 
 
-<div dir="ltr">
-
 ```http
 POST /api/workflow/tasks
 Content-Type: application/json
@@ -310,13 +271,8 @@ Content-Type: application/json
 }
 ```
 
-</div>
-
-
 تکمیل و مسیریابی خودکار:
 
-
-<div dir="ltr">
 
 ```http
 POST /api/workflow/tasks/123/complete
@@ -328,13 +284,8 @@ Content-Type: application/json
 }
 ```
 
-</div>
-
-
 نهایی‌سازی انتخاب کاربر مستقیم:
 
-
-<div dir="ltr">
 
 ```http
 POST /api/workflow/tasks/finalize
@@ -350,16 +301,11 @@ Content-Type: application/json
 }
 ```
 
-</div>
-
-
 ## Configuration و DSL
 
 - `config/workflow_registry.php`: ثبت Providerها، استراتژی‌ها و تنظیمات رجیستری.
   - نمونه:
 
-
-<div dir="ltr">
 
 ```php
 return [
@@ -375,13 +321,8 @@ return [
 ];
 ```
 
-</div>
-
-
 - تعریف انتقال با تریگر خودکار و موازی (در مدل/DB تعریف گردش‌کار):
 
-
-<div dir="ltr">
 
 ```json
 {
@@ -402,9 +343,6 @@ return [
 }
 ```
 
-</div>
-
-
 در حالت `role_direct_user`، اگر کاربر انتخاب نشود، `WorkflowEngine` پیام `requiresUserSelection` برمی‌گرداند و باید از اندپوینت `POST /api/workflow/tasks/finalize` برای نهایی‌سازی استفاده کنید.
 
 ## نکات پیشرفته
@@ -416,5 +354,3 @@ return [
 ---
 
 برای سؤالات و سناریوهای خاص‌تر، می‌توانید از `Workflow` Facade و سرویس‌ها به‌صورت ترکیبی استفاده کنید تا کنترل کامل بر پیشروی، انتساب و اکشن‌ها داشته باشید.
-
-</div>
