@@ -4,7 +4,7 @@
 
 ## نصب
 - افزودن پکیج به پروژه:
-  - `composer require amir/laravel-workflow`
+  - `composer require zojaji/laravel-workflow`
 - انتشار کانفیگ‌ها و مایگریشن‌ها و ویوها:
   - `php artisan vendor:publish --tag=workflow-config`
   - `php artisan vendor:publish --tag=workflow-migrations`

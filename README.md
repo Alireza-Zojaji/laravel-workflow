@@ -4,7 +4,7 @@ General-purpose workflow engine for Laravel, with default integration to Spatie'
 
 ## Installation
 - Require the package:
-  - `composer require amir/laravel-workflow`
+  - `composer require zojaji/laravel-workflow`
 - Publish configs, migrations, and views:
   - `php artisan vendor:publish --tag=workflow-config`
   - `php artisan vendor:publish --tag=workflow-migrations`
@@ -32,4 +32,3 @@ General-purpose workflow engine for Laravel, with default integration to Spatie'
 
 ## License
 - MIT
-

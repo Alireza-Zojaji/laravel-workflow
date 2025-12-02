@@ -1,5 +1,5 @@
 {
-  "name": "amir/laravel-workflow",
+  "name": "zojaji/laravel-workflow",
   "description": "General-purpose workflow engine for Laravel with Spatie integration.",
   "type": "library",
   "version": "0.1.0",
