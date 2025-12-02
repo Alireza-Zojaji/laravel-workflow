@@ -2,7 +2,6 @@
   "name": "zojaji/laravel-workflow",
   "description": "General-purpose workflow engine for Laravel with Spatie integration.",
   "type": "library",
-  "version": "0.1.0",
   "license": "MIT",
   "keywords": ["laravel", "workflow", "spatie", "permission"],
   "authors": [{"name": "Amir"}],
