@@ -1,9 +1,9 @@
 <?php
 
-namespace Amir\Workflow\Builders;
+namespace Zojaji\Workflow\Builders;
 
-use Amir\Workflow\Models\WorkflowInstance;
-use Amir\Workflow\Services\AutomaticTriggerRunner;
+use Zojaji\Workflow\Models\WorkflowInstance;
+use Zojaji\Workflow\Services\AutomaticTriggerRunner;
 
 class InstanceBuilder
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Amir\Workflow\Builders;
+namespace Zojaji\Workflow\Builders;
 
-use Amir\Workflow\Models\WorkflowTask;
-use Amir\Workflow\Models\WorkflowState;
-use Amir\Workflow\Models\WorkflowHistory;
-use Amir\Workflow\Contracts\DecisionEngineInterface;
-use Amir\Workflow\Services\AutomaticTriggerRunner;
+use Zojaji\Workflow\Models\WorkflowTask;
+use Zojaji\Workflow\Models\WorkflowState;
+use Zojaji\Workflow\Models\WorkflowHistory;
+use Zojaji\Workflow\Contracts\DecisionEngineInterface;
+use Zojaji\Workflow\Services\AutomaticTriggerRunner;
 
 class TaskBuilder
 {

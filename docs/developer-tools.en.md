@@ -22,7 +22,7 @@ A fluent entrypoint to interact with workflow instances and tasks.
 - Usage examples:
 
 ```php
-use Amir\Workflow\Facades\Workflow;
+use Zojaji\Workflow\Facades\Workflow;
 
 // Complete a task and automatically route
 $result = Workflow::completeAndRoute($taskId, $userId, [
@@ -54,7 +54,7 @@ Fluent builder for operations on a workflow instance.
 - Example:
 
 ```php
-use Amir\Workflow\Facades\Workflow;
+use Zojaji\Workflow\Facades\Workflow;
 
 $r = Workflow::instance($instanceId)->autoRun();
 ```
@@ -81,7 +81,7 @@ Fluent builder targeting a specific task.
 - Example:
 
 ```php
-use Amir\Workflow\Facades\Workflow;
+use Zojaji\Workflow\Facades\Workflow;
 
 $result = Workflow::onTask($taskId, $userId)
     ->completeAndAutoRoute(['priority' => 3]);
@@ -113,7 +113,7 @@ Responsible for guard evaluation and task creation/assignment.
 - Example:
 
 ```php
-use Amir\Workflow\Contracts\WorkflowEngineInterface;
+use Zojaji\Workflow\Contracts\WorkflowEngineInterface;
 
 $engine = app(WorkflowEngineInterface::class);
 $result = $engine->decideAndAssign([
@@ -155,7 +155,7 @@ Executes automatic transitions and creates tasks (single or parallel modes).
 
 ```php
 $ctx = ['instance_id' => $instanceId, 'state_id' => $stateId];
-$res = app(\Amir\Workflow\Services\AutomaticTriggerRunner::class)
+$res = app(\Zojaji\Workflow\Services\AutomaticTriggerRunner::class)
     ->runForDefinition($definition, 'reviewing', $ctx);
 ```
 
@@ -193,7 +193,7 @@ $this->app->extend(DecisionEngineInterface::class, function ($engine, $app) {
         },
     ];
 
-    return new \Amir\Workflow\Services\DecisionEngine(array_merge($baseProviders, $customProviders));
+    return new \Zojaji\Workflow\Services\DecisionEngine(array_merge($baseProviders, $customProviders));
 });
 ```
 
@@ -214,7 +214,7 @@ Determines the assignee for a task.
 ```php
 // App\Providers\AppServiceProvider::register()
 $this->app->extend(TaskAssignerInterface::class, function ($assigner, $app) {
-    return new \Amir\Workflow\Services\TaskAssigner([
+    return new \Zojaji\Workflow\Services\TaskAssigner([
         'least_busy' => function (array $ctx) { /*...*/ },
         'round_robin' => function (array $ctx) { /*...*/ },
         'random' => function (array $ctx) { /*...*/ },
@@ -303,13 +303,13 @@ Content-Type: application/json
 ```php
 return [
   'assignment_strategies' => [
-    'role.round_robin' => Amir\Workflow\Assignment\RoundRobinStrategy::class,
-    'role.least_busy'  => Amir\Workflow\Assignment\LeastBusyStrategy::class,
-    'role.random'      => Amir\Workflow\Assignment\RandomStrategy::class,
+    'role.round_robin' => Zojaji\Workflow\Assignment\RoundRobinStrategy::class,
+    'role.least_busy'  => Zojaji\Workflow\Assignment\LeastBusyStrategy::class,
+    'role.random'      => Zojaji\Workflow\Assignment\RandomStrategy::class,
 
     // Backward-compatible keys
-    'round_robin' => Amir\Workflow\Assignment\RoundRobinStrategy::class,
-    'least_busy'  => Amir\Workflow\Assignment\LeastBusyStrategy::class,
+    'round_robin' => Zojaji\Workflow\Assignment\RoundRobinStrategy::class,
+    'least_busy'  => Zojaji\Workflow\Assignment\LeastBusyStrategy::class,
   ],
   'condition_providers' => [
     'isHighPriority' => fn(array $ctx) => (int)($ctx['priority'] ?? 0) >= 5,

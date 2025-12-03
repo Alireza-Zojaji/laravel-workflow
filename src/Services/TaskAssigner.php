@@ -1,9 +1,9 @@
 <?php
 
-namespace Amir\Workflow\Services;
+namespace Zojaji\Workflow\Services;
 
-use Amir\Workflow\Contracts\TaskAssignerInterface;
-use Amir\Workflow\Support\Models;
+use Zojaji\Workflow\Contracts\TaskAssignerInterface;
+use Zojaji\Workflow\Support\Models;
 
 class TaskAssigner implements TaskAssignerInterface
 {

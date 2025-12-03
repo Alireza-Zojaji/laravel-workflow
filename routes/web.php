@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Amir\Workflow\Http\Controllers\Admin\WorkflowAdminController;
+use Zojaji\Workflow\Http\Controllers\Admin\WorkflowAdminController;
 use Illuminate\Support\Facades\View;
 
 Route::middleware(['web'])

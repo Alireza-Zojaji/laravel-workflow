@@ -1,6 +1,6 @@
 <?php
 
-namespace Amir\Workflow\Models;
+namespace Zojaji\Workflow\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

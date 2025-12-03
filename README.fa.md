@@ -23,9 +23,9 @@
 
 ## استفاده سریع
 - ایجاد تسک و تخصیص:
-  - `\Amir\Workflow\Facades\Workflow::completeAndRoute($taskId, $userId, $context)`
+  - `\Zojaji\Workflow\Facades\Workflow::completeAndRoute($taskId, $userId, $context)`
 - نهایی‌سازی انتخاب کاربر برای روش `role_direct_user`:
-  - `\Amir\Workflow\Facades\Workflow::finalizeSelection($instanceId, $stateId, $taskName, $userId, $roleId, $decisionOptions)`
+  - `\Zojaji\Workflow\Facades\Workflow::finalizeSelection($instanceId, $stateId, $taskName, $userId, $roleId, $decisionOptions)`
 
 ## مسیرها
 - API تحت `api/workflow/*` و صفحات مدیریت تحت `admin/workflows/*` بارگذاری می‌شوند.

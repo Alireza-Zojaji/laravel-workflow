@@ -3,10 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Amir\Workflow\Http\Controllers\TaskController;
-use Amir\Workflow\Http\Controllers\Api\DefinitionController;
-use Amir\Workflow\Http\Controllers\Api\InstanceController;
-use Amir\Workflow\Support\Models;
+use Zojaji\Workflow\Http\Controllers\TaskController;
+use Zojaji\Workflow\Http\Controllers\Api\DefinitionController;
+use Zojaji\Workflow\Http\Controllers\Api\InstanceController;
+use Zojaji\Workflow\Support\Models;
 
 Route::group([
     'prefix' => 'api/workflow',

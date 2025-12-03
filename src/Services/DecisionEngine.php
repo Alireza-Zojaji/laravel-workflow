@@ -1,8 +1,8 @@
 <?php
 
-namespace Amir\Workflow\Services;
+namespace Zojaji\Workflow\Services;
 
-use Amir\Workflow\Contracts\DecisionEngineInterface;
+use Zojaji\Workflow\Contracts\DecisionEngineInterface;
 
 class DecisionEngine implements DecisionEngineInterface
 {

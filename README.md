@@ -23,9 +23,9 @@ General-purpose workflow engine for Laravel, with default integration to Spatie'
 
 ## Quick Usage
 - Create a task with decision & assignment:
-  - `\Amir\Workflow\Facades\Workflow::completeAndRoute($taskId, $userId, $context)`
+  - `\Zojaji\Workflow\Facades\Workflow::completeAndRoute($taskId, $userId, $context)`
 - Finalize user selection for the `role_direct_user` method:
-  - `\Amir\Workflow\Facades\Workflow::finalizeSelection($instanceId, $stateId, $taskName, $userId, $roleId, $decisionOptions)`
+  - `\Zojaji\Workflow\Facades\Workflow::finalizeSelection($instanceId, $stateId, $taskName, $userId, $roleId, $decisionOptions)`
 
 ## Routes
 - API is loaded under `api/workflow/*` and admin pages under `admin/workflows/*`.

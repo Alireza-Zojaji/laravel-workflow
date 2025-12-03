@@ -1,16 +1,16 @@
 <?php
 
-namespace Amir\Workflow\Http\Controllers\Api;
+namespace Zojaji\Workflow\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Amir\Workflow\Models\WorkflowInstance;
-use Amir\Workflow\Models\WorkflowDefinition;
-use Amir\Workflow\Models\WorkflowState;
-use Amir\Workflow\Services\AutomaticTriggerRunner;
+use Zojaji\Workflow\Models\WorkflowInstance;
+use Zojaji\Workflow\Models\WorkflowDefinition;
+use Zojaji\Workflow\Models\WorkflowState;
+use Zojaji\Workflow\Services\AutomaticTriggerRunner;
 
 class InstanceController extends Controller
 {

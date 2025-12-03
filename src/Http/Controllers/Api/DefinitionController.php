@@ -1,11 +1,11 @@
 <?php
 
-namespace Amir\Workflow\Http\Controllers\Api;
+namespace Zojaji\Workflow\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Amir\Workflow\Models\WorkflowDefinition;
+use Zojaji\Workflow\Models\WorkflowDefinition;
 
 class DefinitionController extends Controller
 {

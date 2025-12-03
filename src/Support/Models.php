@@ -1,6 +1,6 @@
 <?php
 
-namespace Amir\Workflow\Support;
+namespace Zojaji\Workflow\Support;
 
 class Models
 {

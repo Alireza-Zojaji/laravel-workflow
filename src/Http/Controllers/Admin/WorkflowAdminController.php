@@ -1,10 +1,10 @@
 <?php
 
-namespace Amir\Workflow\Http\Controllers\Admin;
+namespace Zojaji\Workflow\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Amir\Workflow\Models\WorkflowDefinition;
+use Zojaji\Workflow\Models\WorkflowDefinition;
 
 class WorkflowAdminController extends Controller
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Amir\Workflow\Assignment;
+namespace Zojaji\Workflow\Assignment;
 
-use Amir\Workflow\Contracts\AssignmentStrategyInterface;
+use Zojaji\Workflow\Contracts\AssignmentStrategyInterface;
 
 class RoundRobinStrategy implements AssignmentStrategyInterface
 {

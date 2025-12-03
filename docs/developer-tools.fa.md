@@ -21,9 +21,8 @@
 
 - مثال استفاده:
 
-
 ```php
-use Amir\Workflow\Facades\Workflow;
+use Zojaji\Workflow\Facades\Workflow;
 
 // تکمیل یک تسک و مسیریابی خودکار
 $result = Workflow::completeAndRoute($taskId, $userId, [
@@ -54,9 +53,8 @@ $res2 = Workflow::finalizeSelection($instanceId, $stateId, 'Approve Request', $c
 
 - مثال:
 
-
 ```php
-use Amir\Workflow\Facades\Workflow;
+use Zojaji\Workflow\Facades\Workflow;
 
 $r = Workflow::instance($instanceId)->autoRun();
 ```
@@ -82,9 +80,8 @@ $r = Workflow::instance($instanceId)->autoRun();
 
 - مثال:
 
-
 ```php
-use Amir\Workflow\Facades\Workflow;
+use Zojaji\Workflow\Facades\Workflow;
 
 $result = Workflow::onTask($taskId, $userId)
     ->completeAndAutoRoute(['priority' => 3]);
@@ -115,9 +112,8 @@ $result = Workflow::onTask($taskId, $userId)
 
 - مثال:
 
-
 ```php
-use Amir\Workflow\Contracts\WorkflowEngineInterface;
+use Zojaji\Workflow\Contracts\WorkflowEngineInterface;
 
 $engine = app(WorkflowEngineInterface::class);
 $result = $engine->decideAndAssign([
@@ -157,10 +153,9 @@ $result = $engine->decideAndAssign([
 
 - مثال موازی:
 
-
 ```php
 $ctx = ['instance_id' => $instanceId, 'state_id' => $stateId];
-$res = app(\Amir\Workflow\Services\AutomaticTriggerRunner::class)
+$res = app(\Zojaji\Workflow\Services\AutomaticTriggerRunner::class)
     ->runForDefinition($definition, 'reviewing', $ctx);
 ```
 
@@ -182,11 +177,10 @@ $res = app(\Amir\Workflow\Services\AutomaticTriggerRunner::class)
 
 - مثال توسعه‌ی Providerها:
 
-
 ```php
 // App\Providers\AppServiceProvider::register()
 $this->app->extend(DecisionEngineInterface::class, function ($engine, $app) {
-    return new \Amir\Workflow\Services\DecisionEngine(array_merge(
+    return new \Zojaji\Workflow\Services\DecisionEngine(array_merge(
         config('workflow_registry.condition_providers', []),
         config('workflow_registry.actions', []),
         [
@@ -214,11 +208,10 @@ $this->app->extend(DecisionEngineInterface::class, function ($engine, $app) {
 
 - توسعه‌ی استراتژی‌ها:
 
-
 ```php
 // App\Providers\AppServiceProvider::register()
 $this->app->extend(TaskAssignerInterface::class, function ($assigner, $app) {
-    return new \Amir\Workflow\Services\TaskAssigner([
+    return new \Zojaji\Workflow\Services\TaskAssigner([
         'least_busy' => function (array $ctx) { /*...*/ },
         'round_robin' => function (array $ctx) { /*...*/ },
         'random' => function (array $ctx) { /*...*/ },
@@ -255,7 +248,6 @@ $this->app->extend(TaskAssignerInterface::class, function ($assigner, $app) {
 
 ایجاد تسک:
 
-
 ```http
 POST /api/workflow/tasks
 Content-Type: application/json
@@ -273,7 +265,6 @@ Content-Type: application/json
 
 تکمیل و مسیریابی خودکار:
 
-
 ```http
 POST /api/workflow/tasks/123/complete
 Content-Type: application/json
@@ -285,7 +276,6 @@ Content-Type: application/json
 ```
 
 نهایی‌سازی انتخاب کاربر مستقیم:
-
 
 ```http
 POST /api/workflow/tasks/finalize
@@ -306,13 +296,12 @@ Content-Type: application/json
 - `config/workflow_registry.php`: ثبت Providerها، استراتژی‌ها و تنظیمات رجیستری.
   - نمونه:
 
-
 ```php
 return [
   'assignment_strategies' => [
-    'role.round_robin' => Amir\Workflow\Assignment\RoundRobinStrategy::class,
-    'role.least_busy' => Amir\Workflow\Assignment\LeastBusyStrategy::class,
-    'role.random' => Amir\Workflow\Assignment\RandomStrategy::class,
+    'role.round_robin' => Zojaji\Workflow\Assignment\RoundRobinStrategy::class,
+    'role.least_busy' => Zojaji\Workflow\Assignment\LeastBusyStrategy::class,
+    'role.random' => Zojaji\Workflow\Assignment\RandomStrategy::class,
   ],
   'condition_providers' => [
     'isHighPriority' => fn(array $ctx) => (int)($ctx['priority'] ?? 0) >= 5,
@@ -322,7 +311,6 @@ return [
 ```
 
 - تعریف انتقال با تریگر خودکار و موازی (در مدل/DB تعریف گردش‌کار):
-
 
 ```json
 {

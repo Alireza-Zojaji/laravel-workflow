@@ -1,11 +1,11 @@
 <?php
 
-namespace Amir\Workflow\Models;
+namespace Zojaji\Workflow\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
-use Amir\Workflow\Support\Models;
+use Zojaji\Workflow\Support\Models;
 
 class WorkflowTask extends Model
 {

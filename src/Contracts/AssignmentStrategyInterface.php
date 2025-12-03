@@ -1,6 +1,6 @@
 <?php
 
-namespace Amir\Workflow\Contracts;
+namespace Zojaji\Workflow\Contracts;
 
 interface AssignmentStrategyInterface
 {

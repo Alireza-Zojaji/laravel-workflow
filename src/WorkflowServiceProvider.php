@@ -1,16 +1,17 @@
 <?php
 
-namespace Amir\Workflow;
+namespace Zojaji\Workflow;
 
 use Illuminate\Support\ServiceProvider;
-use Amir\Workflow\Contracts\WorkflowEngineInterface;
-use Amir\Workflow\Services\WorkflowEngine;
-use Amir\Workflow\Contracts\TaskAssignerInterface;
-use Amir\Workflow\Contracts\DecisionEngineInterface;
-use Amir\Workflow\Services\TaskAssigner;
-use Amir\Workflow\Services\DecisionEngine;
-use Amir\Workflow\Services\AutomaticTriggerRunner;
-use Amir\Workflow\Services\WorkflowManager;
+use Illuminate\Contracts\Container\Container;
+use Zojaji\Workflow\Contracts\WorkflowEngineInterface;
+use Zojaji\Workflow\Services\WorkflowEngine;
+use Zojaji\Workflow\Contracts\TaskAssignerInterface;
+use Zojaji\Workflow\Contracts\DecisionEngineInterface;
+use Zojaji\Workflow\Services\TaskAssigner;
+use Zojaji\Workflow\Services\DecisionEngine;
+use Zojaji\Workflow\Services\AutomaticTriggerRunner;
+use Zojaji\Workflow\Services\WorkflowManager;
 
 class WorkflowServiceProvider extends ServiceProvider
 {
@@ -47,7 +48,7 @@ class WorkflowServiceProvider extends ServiceProvider
         });
 
         // Facade accessor binding for fluent DSL
-        $this->app->singleton('workflow', function ($app) {
+        $this->app->singleton('workflow', function (Container $app) {
             return new WorkflowManager(
                 $app->make(AutomaticTriggerRunner::class),
                 $app->make(DecisionEngineInterface::class),

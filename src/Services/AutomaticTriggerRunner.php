@@ -1,8 +1,8 @@
 <?php
 
-namespace Amir\Workflow\Services;
+namespace Zojaji\Workflow\Services;
 
-use Amir\Workflow\Models\WorkflowDefinition;
+use Zojaji\Workflow\Models\WorkflowDefinition;
 
 class AutomaticTriggerRunner
 {

@@ -6,8 +6,8 @@ return [
         // 'send_email' => \Vendor\Package\Actions\SendEmail::class,
     ],
     'assignment_strategies' => [
-        'round_robin' => \Amir\Workflow\Assignment\RoundRobinStrategy::class,
-        'least_busy'  => \Amir\Workflow\Assignment\LeastBusyStrategy::class,
+        'round_robin' => \Zojaji\Workflow\Assignment\RoundRobinStrategy::class,
+        'least_busy'  => \Zojaji\Workflow\Assignment\LeastBusyStrategy::class,
     ],
     'condition_providers' => [
         // Example: 'expr' => \Vendor\Package\Conditions\ExpressionEvaluator::class,

@@ -1,11 +1,11 @@
 <?php
 
-namespace Amir\Workflow\Services;
+namespace Zojaji\Workflow\Services;
 
-use Amir\Workflow\Contracts\WorkflowEngineInterface;
-use Amir\Workflow\Contracts\DecisionEngineInterface;
-use Amir\Workflow\Contracts\TaskAssignerInterface;
-use Amir\Workflow\Models\WorkflowTask;
+use Zojaji\Workflow\Contracts\WorkflowEngineInterface;
+use Zojaji\Workflow\Contracts\DecisionEngineInterface;
+use Zojaji\Workflow\Contracts\TaskAssignerInterface;
+use Zojaji\Workflow\Models\WorkflowTask;
 
 class WorkflowEngine implements WorkflowEngineInterface
 {
