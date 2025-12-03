@@ -72,173 +72,181 @@
                         </form>
                     </div>
 
-                    <form id="editWorkflowForm" method="post" action="{{ route('workflow.admin.update', $definition->id) }}" class="p-6 space-y-8">
+                    <form id="editWorkflowForm" method="post" action="{{ route('workflow.admin.update', $definition->id) }}" class="p-6">
                         @csrf
                         @method('PUT')
-
-                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-3">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Name (Read-only)</label>
-                                <input type="text" value="{{ $definition->name }}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 text-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2" />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Label</label>
-                                <input type="text" name="label" value="{{ $definition->label }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2" />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Marking Store</label>
-                                <select name="marking_store" id="markingStoreSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
-                                    <option value="">- Select -</option>
-                                    <option value="single_state" {{ ($definition->marking_store ?? '') === 'single_state' ? 'selected' : '' }}>single_state</option>
-                                    <option value="multiple_state" {{ ($definition->marking_store ?? '') === 'multiple_state' ? 'selected' : '' }}>multiple_state</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="border-t border-gray-200 pt-8">
-                            <h4 class="text-lg font-medium text-gray-900 mb-4">Places</h4>
-                            <div class="flex gap-4 mb-4 items-end">
-                                <div class="flex-1">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">New Place Name</label>
-                                    <input id="placeInput" type="text" placeholder="e.g. draft" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2" />
+                        <div class="grid grid-cols-1 gap-y-8 gap-x-8 lg:grid-cols-2">
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                                    <h4 class="text-md font-semibold text-gray-800 mb-4">Basic Information</h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="name" class="block text-sm font-medium text-gray-700">Name *</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="name" id="name" required value="{{ $definition->name }}" readonly class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="label" class="block text-sm font-medium text-gray-700">Label</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="label" id="label" value="{{ $definition->label }}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="markingStoreSelect" class="block text-sm font-medium text-gray-700">Marking Store</label>
+                                            <div class="mt-1">
+                                                <select name="marking_store" id="markingStoreSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                                    <option value="single_state" {{ ($definition->marking_store ?? '') === 'single_state' ? 'selected' : '' }}>single_state</option>
+                                                    <option value="multiple_state" {{ ($definition->marking_store ?? '') === 'multiple_state' ? 'selected' : '' }}>multiple_state</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="flex h-5 items-center">
+                                                <input type="hidden" name="is_active" value="0" />
+                                                <input id="is_active" name="is_active" type="checkbox" value="1" {{ $definition->is_active ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                            </div>
+                                            <div class="ml-3 text-sm">
+                                                <label for="is_active" class="font-medium text-gray-700">Active</label>
+                                                <p class="text-gray-500">Enable this workflow immediately.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button id="addPlaceBtn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                    Add Place
-                                </button>
                             </div>
-
-                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                                <table id="placesTable" class="min-w-full divide-y divide-gray-300">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">#</th>
-                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
-                                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                <span class="sr-only">Remove</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200 bg-white"></tbody>
-                                </table>
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                                    <h4 class="text-md font-semibold text-gray-800 mb-4">Places</h4>
+                                    <div class="flex gap-2 mb-4">
+                                        <input id="placeInput" type="text" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border" placeholder="e.g. draft" />
+                                        <button id="addPlaceBtn" type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add</button>
+                                    </div>
+                                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg bg-white">
+                                        <table id="placesTable" class="min-w-full divide-y divide-gray-300">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col" class="py-2 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">#</th>
+                                                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Name</th>
+                                                    <th scope="col" class="px-3 py-2 text-right text-xs font-medium uppercase tracking-wide text-gray-500">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200 bg-white"></tbody>
+                                        </table>
+                                        <div id="placesEmptyState" class="p-4 text-center text-sm text-gray-500 italic">No places added yet.</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="border-t border-gray-200 pt-8">
-                            <h4 class="text-lg font-medium text-gray-900 mb-4">Transitions</h4>
-
-                            <div class="bg-gray-50 p-4 rounded-md border border-gray-200 space-y-4 mb-6">
+                        <div class="mt-8 bg-gray-50 p-4 rounded-md border border-gray-200">
+                            <h4 class="text-md font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Transitions Management</h4>
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
+                                <div class="col-span-1 md:col-span-2 lg:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700">Transition Name</label>
+                                    <input id="transitionNameInput" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border" placeholder="e.g. publish" />
+                                </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Transition Name</label>
-                                    <input id="transitionNameInput" type="text" placeholder="e.g. publish" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2" />
+                                    <label class="block text-sm font-medium text-gray-700">From (Hold Ctrl to select multiple)</label>
+                                    <select id="fromSelect" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-32 border"></select>
                                 </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">From (hold Ctrl/Cmd to select multiple)</label>
-                                        <select id="fromSelect" multiple class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 min-h-[100px]"></select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">To (hold Ctrl/Cmd to select multiple)</label>
-                                        <select id="toSelect" multiple class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 min-h-[100px]"></select>
-                                    </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">To (Hold Ctrl to select multiple)</label>
+                                    <select id="toSelect" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-32 border"></select>
                                 </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="space-y-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Guard (Optional)</label>
-                                        <input id="guardProviderInput" type="text" placeholder="e.g. isHighPriority" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2" />
+                                        <label class="block text-sm font-medium text-gray-700">Guard Provider (Optional)</label>
+                                        <input id="guardProviderInput" type="text" placeholder="e.g. isHighPriority" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border" />
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Trigger Type</label>
-                                        <select id="triggerTypeSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
-                                            <option value="">-</option>
+                                        <label class="block text-sm font-medium text-gray-700">Trigger Type</label>
+                                        <select id="triggerTypeSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                            <option value="">- Select -</option>
                                             <option value="manual">manual</option>
                                             <option value="automatic">automatic</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Decision Mode</label>
-                                        <select id="decisionModeSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
+                                        <label class="block text-sm font-medium text-gray-700">Decision Mode</label>
+                                        <select id="decisionModeSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
                                             <option value="none" selected>none</option>
                                             <option value="approve">approve</option>
                                             <option value="reject">reject</option>
                                         </select>
                                     </div>
-                                    <div id="assignmentTypeGroup" style="display:none;">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Assignment Type</label>
-                                        <select id="assignmentTypeSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
-                                            <option value="">-</option>
-                                            <option value="user">user</option>
-                                            <option value="role">role</option>
-                                        </select>
-                                    </div>
                                 </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            </div>
+                            <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+                                <h5 class="text-sm font-medium text-gray-700 mb-3">Assignment (Destination)</h5>
+                                <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                                     <div id="assignmentModeGroup" style="display:block;">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Assignment Mode</label>
-                                        <select id="assignmentModeSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Assignment Mode</label>
+                                        <select id="assignmentModeSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
                                             <option value="single">single</option>
                                             <option value="parallel">parallel</option>
                                         </select>
                                     </div>
+                                    <div id="assignmentTypeGroup" style="display:none;">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Type</label>
+                                        <select id="assignmentTypeSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                            <option value="">- None -</option>
+                                            <option value="user">user</option>
+                                            <option value="role">role</option>
+                                        </select>
+                                    </div>
                                     <div id="assignmentUserGroup" style="display:none;">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Role for runtime user selection</label>
-                                        <select id="userSelectionRoleSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Role for runtime user selection</label>
+                                        <select id="userSelectionRoleSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
                                             <option value="">- Select Role -</option>
                                         </select>
                                     </div>
                                     <div id="assignmentRoleGroup" style="display:none;">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Assign to Role</label>
-                                        <select id="roleSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Assign to Role</label>
+                                        <select id="roleSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
                                             <option value="">- Select Role -</option>
                                         </select>
                                     </div>
                                     <div id="assignmentMethodGroup" style="display:none;">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Assignment Method</label>
-                                        <select id="assignmentMethodSelect" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2">
-                                            <option value="">- Select Method -</option>
-                                            <option value="role_claim">انتساب به همه‌ی اعضا برای اولین نفری که انتخاب کند</option>
-                                            <option value="role_direct_user">انتساب به عضوی که توسط ارجاع‌کننده تعیین می‌شود</option>
-                                            <option value="role_least_busy">انتساب به عضوی که سرش خلوت‌تر از همه است</option>
-                                            <option value="role_round_robin">انتساب گردشی</option>
-                                            <option value="role_random">انتساب تصادفی</option>
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Assignment Method</label>
+                                        <select id="assignmentMethodSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                            <option value="role_claim">Claim by role members (first-come)</option>
+                                            <option value="role_direct_user">Direct user chosen by referrer</option>
+                                            <option value="role_least_busy">Least busy member</option>
+                                            <option value="role_round_robin">Round robin</option>
+                                            <option value="role_random">Random assignment</option>
                                         </select>
                                     </div>
-
-                                    <div id="parallelConfigGroup" style="display:none;" class="md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Parallel Count (n)</label>
-                                        <input id="parallelCountInput" type="number" min="1" value="2" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2" />
+                                    <div id="parallelConfigGroup" style="display:none;" class="md:col-span-4">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Parallel Count (n)</label>
+                                        <input id="parallelCountInput" type="number" min="1" value="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border" />
                                         <div id="parallelSlotsContainer" class="mt-3 space-y-3"></div>
                                     </div>
-                                    <div id="singleConfigGroup" style="display:block;" class="md:col-span-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Single Assignment Options</label>
-        								<div id="singleSlotContainer" class="mt-3 space-y-3"></div>
+                                    <div id="singleConfigGroup" style="display:block;" class="md:col-span-4">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase">Single Assignment Options</label>
+                                        <div id="singleSlotContainer" class="mt-3 space-y-3"></div>
                                     </div>
                                 </div>
-
-                                <div class="pt-2">
-                                    <button id="addTransitionBtn" type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        <svg class="mr-2 -ml-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                        </svg>
-                                        Add Transition
-                                    </button>
-                                </div>
                             </div>
-
-                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg overflow-x-auto">
+                            <div class="flex justify-end">
+                                <button id="addTransitionBtn" type="button" class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <svg class="mr-2 -ml-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                    Add Transition
+                                </button>
+                            </div>
+                            <div class="mt-6 overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg bg-white">
                                 <table id="transitionsTable" class="min-w-full divide-y divide-gray-300">
                                     <thead class="bg-gray-50">
                                         <tr>
-                                            <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">#</th>
-                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Name</th>
-                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">From</th>
-                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">To</th>
-                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Guard</th>
-                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Trigger</th>
-                                            <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Assignment</th>
-                                            <th class="relative py-3.5 pl-3 pr-4 sm:pr-6"><span class="sr-only">Remove</span></th>
+                                            <th scope="col" class="py-2 pl-4 pr-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:pl-6">#</th>
+                                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Name</th>
+                                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">From</th>
+                                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">To</th>
+                                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Guard</th>
+                                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Trigger</th>
+                                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">Assignment</th>
+                                            <th scope="col" class="px-3 py-2 text-right text-xs font-medium uppercase tracking-wide text-gray-500">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white"></tbody>
@@ -246,24 +254,26 @@
                                 <div id="transitionsEmptyState" class="p-4 text-center text-sm text-gray-500 italic">No transitions added yet.</div>
                             </div>
                         </div>
-
-                        <div class="border-t border-gray-200 pt-6 flex items-center justify-between">
-                            <div class="flex items-center">
-                                <input type="hidden" name="is_active" value="0" />
-                                <input type="checkbox" name="is_active" value="1" {{ $definition->is_active ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                                <label class="ml-2 block text-sm font-medium text-gray-700">Is Active</label>
-                            </div>
-
-                            <div class="flex space-x-3">
-                                <a href="{{ route('workflow.admin.index') }}" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Cancel</a>
-                                <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                    Save Changes
-                                </button>
-                            </div>
+                        <div class="mt-6 bg-gray-100 p-4 rounded-md border border-gray-200 hidden">
+                            <details>
+                                <summary class="text-xs text-gray-500 cursor-pointer">Show JSON Data (Debug)</summary>
+                                <div class="mt-2 space-y-2">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-700">places (JSON)</label>
+                                        <textarea name="places_json" id="placesJson" rows="2" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs border font-mono" readonly></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-700">transitions (JSON)</label>
+                                        <textarea name="transitions_json" id="transitionsJson" rows="2" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs border font-mono" readonly></textarea>
+                                    </div>
+                                </div>
+                            </details>
                         </div>
-
-                        <textarea name="places_json" id="placesJson" hidden></textarea>
-                        <textarea name="transitions_json" id="transitionsJson" hidden></textarea>
+                        <div class="mt-8 flex justify-end border-t border-gray-200 pt-6">
+                            <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-3 px-6 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                Save Workflow
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -277,6 +287,7 @@
             const placeInput = document.getElementById('placeInput');
             const addPlaceBtn = document.getElementById('addPlaceBtn');
             const placesTableBody = document.querySelector('#placesTable tbody');
+            const placesEmptyState = document.getElementById('placesEmptyState');
 
             const transitionNameInput = document.getElementById('transitionNameInput');
             const fromSelect = document.getElementById('fromSelect');
@@ -293,18 +304,23 @@
 
             function renderPlaces() {
                 placesTableBody.innerHTML = '';
-                places.forEach((name, idx) => {
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-gray-50";
-                    tr.innerHTML = `
-                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">${idx + 1}</td>
-                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${name}</td>
-                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <button data-idx="${idx}" type="button" class="text-red-600 hover:text-red-900">Remove</button>
-                        </td>
-                    `;
-                    placesTableBody.appendChild(tr);
-                });
+                if (places.length === 0) {
+                    if (placesEmptyState) placesEmptyState.style.display = 'block';
+                } else {
+                    if (placesEmptyState) placesEmptyState.style.display = 'none';
+                    places.forEach((name, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.className = "hover:bg-gray-50";
+                        tr.innerHTML = `
+                            <td class="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">${idx + 1}</td>
+                            <td class="whitespace-nowrap px-3 py-2 text-sm text-gray-500">${name}</td>
+                            <td class="whitespace-nowrap px-3 py-2 text-right text-sm font-medium">
+                                <button data-idx="${idx}" type="button" class="text-red-600 hover:text-red-900 hover:underline remove-place-btn">Remove</button>
+                            </td>
+                        `;
+                        placesTableBody.appendChild(tr);
+                    });
+                }
                 updatePlaceSelects();
                 rebuildJson();
             }
@@ -386,7 +402,6 @@
 
                 if (!name || fromVals.length === 0 || toVals.length === 0) return;
 
-                // Build assignment configuration aligned with index UI (singleSlot + parallelSlots)
                 let assignmentObj = undefined;
                 let decisionOptions = undefined;
                 const mode = assignmentModeSelect.value || 'single';
@@ -452,7 +467,6 @@
                     assignment: assignmentObj,
                     decision_options: decisionOptions
                 };
-                // attach strategy_key if method selected maps to a strategy
                 if (typeof strategyKey !== 'undefined') {
                     newTransition.strategy_key = strategyKey;
                 }
@@ -474,7 +488,6 @@
                 assignmentTypeSelect.value = '';
                 userSelectionRoleSelect.value = '';
                 roleSelect.value = '';
-                // strategy UI removed
                 updateAssignmentUI();
                 renderTransitions();
             });
@@ -503,18 +516,18 @@
             });
 
             placesTableBody.addEventListener('click', (e) => {
-                const btn = e.target.closest('button[data-idx]');
-                if (!btn) return;
-                const idx = parseInt(btn.dataset.idx, 10);
-                const removedName = places[idx];
-                places.splice(idx, 1);
-                transitions = transitions.filter(t => {
-                    const fromArr = Array.isArray(t.from) ? t.from : (t.from ? [t.from] : []);
-                    const toArr = Array.isArray(t.to) ? t.to : (t.to ? [t.to] : []);
-                    return !fromArr.includes(removedName) && !toArr.includes(removedName);
-                });
-                renderPlaces();
-                renderTransitions();
+                if (e.target.classList.contains('remove-place-btn')) {
+                    const idx = parseInt(e.target.dataset.idx, 10);
+                    const removedName = places[idx];
+                    places.splice(idx, 1);
+                    transitions = transitions.filter(t => {
+                        const fromArr = Array.isArray(t.from) ? t.from : (t.from ? [t.from] : []);
+                        const toArr = Array.isArray(t.to) ? t.to : (t.to ? [t.to] : []);
+                        return !fromArr.includes(removedName) && !toArr.includes(removedName);
+                    });
+                    renderPlaces();
+                    renderTransitions();
+                }
             });
 
             transitionsTableBody.addEventListener('click', (e) => {
