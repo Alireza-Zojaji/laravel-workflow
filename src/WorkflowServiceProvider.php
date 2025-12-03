@@ -4,6 +4,7 @@ namespace Zojaji\Workflow;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Config;
 use Zojaji\Workflow\Contracts\WorkflowEngineInterface;
 use Zojaji\Workflow\Services\WorkflowEngine;
 use Zojaji\Workflow\Contracts\TaskAssignerInterface;
@@ -21,13 +22,13 @@ class WorkflowServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/workflow_registry.php', 'workflow_registry');
 
         $this->app->singleton(TaskAssignerInterface::class, function ($app) {
-            return new TaskAssigner(config('workflow_registry.assignment_strategies', []));
+            return new TaskAssigner(Config::get('workflow_registry.assignment_strategies', []));
         });
 
         $this->app->singleton(DecisionEngineInterface::class, function ($app) {
             $providers = array_merge(
-                (array) config('workflow_registry.condition_providers', []),
-                (array) config('workflow_registry.actions', [])
+                (array) Config::get('workflow_registry.condition_providers', []),
+                (array) Config::get('workflow_registry.actions', [])
             );
             return new DecisionEngine($providers);
         });
@@ -60,19 +61,19 @@ class WorkflowServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/workflow.php' => config_path('workflow.php'),
-            __DIR__ . '/../config/workflow_registry.php' => config_path('workflow_registry.php'),
+            __DIR__ . '/../config/workflow.php' => $this->app->configPath('workflow.php'),
+            __DIR__ . '/../config/workflow_registry.php' => $this->app->configPath('workflow_registry.php'),
         ], 'workflow-config');
 
         // Publish migrations only if the migrations directory exists
         if (is_dir(__DIR__ . '/../database/migrations')) {
             $this->publishes([
-                __DIR__ . '/../database/migrations' => database_path('migrations'),
+                __DIR__ . '/../database/migrations' => $this->app->databasePath('migrations'),
             ], 'workflow-migrations');
         }
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/workflow'),
+            __DIR__ . '/../resources/views' => $this->app->resourcePath('views/vendor/workflow'),
         ], 'workflow-views');
 
         // API routes (JSON endpoints)

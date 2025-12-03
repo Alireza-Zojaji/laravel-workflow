@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Collection;
 use Zojaji\Workflow\Http\Controllers\TaskController;
 use Zojaji\Workflow\Http\Controllers\Api\DefinitionController;
 use Zojaji\Workflow\Http\Controllers\Api\InstanceController;
@@ -15,7 +18,7 @@ Route::group([
 ], function () {
     Route::get('/admin/workflows', function () {
         // Redirect to the web route that provides $definitions and $configDefs
-        return redirect()->route('workflow.admin.index');
+        return Redirect::route('workflow.admin.index');
     })->name('admin.index');
 
     // Lookups for Users and Roles
@@ -73,8 +76,8 @@ Route::group([
 
     // Lookups for Assignment Strategies
     Route::get('/lookups/strategies', function () {
-        $strategies = config('workflow_registry.assignment_strategies', []);
-        $list = collect($strategies)->map(function ($handler, $key) {
+        $strategies = Config::get('workflow_registry.assignment_strategies', []);
+        $list = Collection::make($strategies)->map(function ($handler, $key) {
             $name = Str::of($key)->replace('_', ' ')->title()->toString();
             return ['id' => (string) $key, 'name' => $name];
         })->values();
