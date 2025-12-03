@@ -2,6 +2,10 @@
 
 General-purpose workflow engine for Laravel, with default integration to Spatie's `laravel-permission`.
 
+Full developer documentation: `docs/guide.en.md`
+Examples: `docs/examples.en.md`
+Persian documentation: `docs/guide.fa.md`, `docs/examples.fa.md`
+
 ## Installation
 - Require the package:
   - `composer require zojaji/laravel-workflow`
