@@ -345,6 +345,42 @@ return [
 
 در حالت `role_direct_user`، اگر کاربر انتخاب نشود، `WorkflowEngine` پیام `requiresUserSelection` برمی‌گرداند و باید از اندپوینت `POST /api/workflow/tasks/finalize` برای نهایی‌سازی استفاده کنید.
 
+
+### مسیریابی شرطی (approve/reject)
+
+- در UI ادمین (صفحات `index` و `edit`) یک فیلد سه‌حالته با عنوان `Decision Mode` برای هر ترنزیشن وجود دارد: `none|approve|reject`.
+- اگر `approve` یا `reject` انتخاب شود، ترنزیشن به‌صورت شرطی ذخیره می‌شود و مسیر تصمیم با اولین مقصد انتخاب‌شده در فیلد `To` نگاشت می‌گردد.
+- ساختار ذخیره‌سازی در JSONِ ترنزیشن‌ها به شکل زیر است:
+
+```json
+{
+  "name": "Review Decision",
+  "from": "reviewing",
+  "to": ["approved", "rejected"],
+  "conditional": {
+    "key": "decision",
+    "routes": [
+      { "value": "approve", "to": "approved" },
+      { "value": "reject",  "to": "rejected" }
+    ]
+  }
+}
+```
+
+- در زمان اجرا، تصمیم کاربر با کلید `context.decision` ارسال می‌شود:
+
+```http
+POST /api/workflow/tasks/{taskId}/complete
+Content-Type: application/json
+
+{
+  "user_id": 42,
+  "context": { "decision": "approve" }
+}
+```
+
+- اگر `context.decision` ارسال نشود یا خالی باشد، موتور از مقصد عادی `to[0]` استفاده می‌کند.
+
 ## نکات پیشرفته
 
 - گاردها (`guard_provider`) کانتکست‌های زیر را دریافت می‌کنند: `instance_id`, `state_id`, `user_id`, `transition`, `definition_id`, `current_place`.

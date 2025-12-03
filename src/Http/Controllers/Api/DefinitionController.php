@@ -131,6 +131,7 @@ class DefinitionController extends Controller
                     'guard_provider' => $tConf['guard_provider'] ?? null,
                     'trigger' => $tConf['trigger'] ?? null,
                     'assignment' => $tConf['assignment'] ?? null,
+                    'conditional' => $tConf['conditional'] ?? null,
                 ];
             }
         }
@@ -155,4 +156,3 @@ class DefinitionController extends Controller
         return is_array($decoded) ? $decoded : null;
     }
 }
-

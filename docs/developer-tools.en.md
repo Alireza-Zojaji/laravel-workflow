@@ -368,6 +368,42 @@ return [
 
 When using `role_direct_user` and a user is not provided, `WorkflowEngine` returns `requiresUserSelection` and you should call `POST /api/workflow/tasks/finalize` to assign the chosen user.
 
+
+### Conditional routing (approve/reject)
+
+- In the admin UI (`index` and `edit` pages), a three-state `Decision Mode` field exists per transition: `none|approve|reject`.
+- Selecting `approve` or `reject` stores the transition conditionally and maps the decision to the first selected `To` destination.
+- The transition JSON stores the conditional as:
+
+```json
+{
+  "name": "Review Decision",
+  "from": "reviewing",
+  "to": ["approved", "rejected"],
+  "conditional": {
+    "key": "decision",
+    "routes": [
+      { "value": "approve", "to": "approved" },
+      { "value": "reject",  "to": "rejected" }
+    ]
+  }
+}
+```
+
+- At runtime, the client passes the user decision via `context.decision`:
+
+```http
+POST /api/workflow/tasks/{taskId}/complete
+Content-Type: application/json
+
+{
+  "user_id": 42,
+  "context": { "decision": "approve" }
+}
+```
+
+- If `context.decision` is missing or empty, the engine falls back to the normal destination `to[0]`.
+
 ## Advanced Notes
 
 - Guards (`guard_provider`) receive context including: `instance_id`, `state_id`, `user_id`, `transition`, `definition_id`, `current_place`.
@@ -377,4 +413,3 @@ When using `role_direct_user` and a user is not provided, `WorkflowEngine` retur
 ---
 
 For further scenarios, combine the `Workflow` facade and services to take full control over advancement, assignment, and actions.
-

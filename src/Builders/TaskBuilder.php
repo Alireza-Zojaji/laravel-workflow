@@ -69,6 +69,36 @@ class TaskBuilder
                 continue;
             }
 
+            $conditional = is_array($t['conditional'] ?? null) ? $t['conditional'] : null;
+            if ($conditional) {
+                $decisionKey = (string) ($conditional['key'] ?? ($conditional['decision_key'] ?? 'decision'));
+                $decisionVal = (string) ($context[$decisionKey] ?? '');
+                if ($decisionVal !== '') {
+                    $routes = is_array($conditional['routes'] ?? null) ? $conditional['routes'] : null;
+                    if ($routes) {
+                        foreach ($routes as $r) {
+                            $rv = (string) ($r['value'] ?? '');
+                            if ($rv === $decisionVal) {
+                                $toKey = $r['to'] ?? null;
+                                $pickedTransition = $t;
+                                break;
+                            }
+                        }
+                        if ($toKey) break;
+                    } else {
+                        if ($decisionVal === 'approve') {
+                            $toKey = $conditional['approve_to'] ?? null;
+                            $pickedTransition = $t;
+                            if ($toKey) break;
+                        } elseif ($decisionVal === 'reject') {
+                            $toKey = $conditional['reject_to'] ?? null;
+                            $pickedTransition = $t;
+                            if ($toKey) break;
+                        }
+                    }
+                }
+            }
+
             $guardProvider = $t['guard_provider'] ?? null;
             $canProceed = $this->decision->evaluate($guardProvider, array_merge($context, [
                 'transition' => $t,
@@ -84,7 +114,7 @@ class TaskBuilder
 
             $to = $t['to'] ?? [];
             $toArr = is_array($to) ? $to : (empty($to) ? [] : [$to]);
-            $toKey = $toArr[0] ?? null; // pick the first valid target for now
+            $toKey = $toArr[0] ?? null;
             $pickedTransition = $t;
             break;
         }

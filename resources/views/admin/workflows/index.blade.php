@@ -222,6 +222,14 @@
                                             <option value="automatic">automatic</option>
                                         </select>
                                     </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Decision Mode</label>
+                                        <select id="decisionModeSelect" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border">
+                                            <option value="none" selected>none</option>
+                                            <option value="approve">approve</option>
+                                            <option value="reject">reject</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
@@ -392,6 +400,7 @@
         const toSelect = document.getElementById('toSelect');
         const guardProviderInput = document.getElementById('guardProviderInput');
         const triggerTypeSelect = document.getElementById('triggerTypeSelect');
+        const decisionModeSelect = document.getElementById('decisionModeSelect');
         const assignmentTypeSelect = document.getElementById('assignmentTypeSelect');
         const assignmentModeSelect = document.getElementById('assignmentModeSelect');
         const userSelectionRoleSelect = document.getElementById('userSelectionRoleSelect');
@@ -427,7 +436,6 @@
             const currentFrom = getSelectedValues(fromSelect);
             const currentTo = getSelectedValues(toSelect);
 
-            // Clear options
             fromSelect.innerHTML = '';
             toSelect.innerHTML = '';
 
@@ -446,6 +454,8 @@
                 if(currentTo.includes(o.value)) o.selected = true;
             });
         }
+
+        // Legacy conditional UI removed in favor of three-state Decision Mode
 
         function renderPlaces() {
             placesTableBody.innerHTML = '';
@@ -514,7 +524,8 @@
                 trigger: t.trigger || undefined,
                 assignment: t.assignment || undefined,
                 decision_options: t.decision_options || undefined,
-                strategy_key: t.strategy_key || undefined
+                strategy_key: t.strategy_key || undefined,
+                conditional: t.conditional || undefined
             })));
         }
 
@@ -643,6 +654,13 @@
             if (typeof strategyKey !== 'undefined') {
                 newTransition.strategy_key = strategyKey;
             }
+            const decisionMode = decisionModeSelect?.value || 'none';
+            if (decisionMode === 'approve' || decisionMode === 'reject') {
+                const pickedTo = toVals[0] || '';
+                newTransition.conditional = { key: 'decision', routes: [{ value: decisionMode, to: pickedTo }] };
+                const unionTo = Array.from(new Set([ ...toVals, pickedTo ].filter(Boolean)));
+                newTransition.to = unionTo;
+            }
             transitions.push(newTransition);
 
             transitionNameInput.value = '';
@@ -650,6 +668,7 @@
             toSelect.selectedIndex = -1;
             guardProviderInput.value = '';
             triggerTypeSelect.value = '';
+            if (decisionModeSelect) decisionModeSelect.value = 'none';
             assignmentTypeSelect.value = '';
             userSelectionRoleSelect.value = '';
             roleSelect.value = '';
